@@ -1,7 +1,7 @@
 """
 pathtools.py provides functions handling IP hops, IXP detection and ASN information.
 """
-import dbtools as db
+from . import dbtools as db
 import os
 import copy
 import logging
@@ -421,7 +421,7 @@ class IpForwardingPattern:
         if len(pattern.pattern) != len(self.pattern):
             return False
         else:
-            return self.is_match(range(len(pattern.pattern)), pattern.pattern)
+            return self.is_match(list(range(len(pattern.pattern))), pattern.pattern)
 
     def __repr__(self):
         return "IpForwardingPattern(%r)" % dict(enumerate(self.pattern))

@@ -44,7 +44,7 @@ class AsRelation:
         C2P (int): 1, class attrubute, customer to provider
         coder (dict): int to above attributes mapping
     """
-    P2C, PEER, C2P = range(-1, 2, 1)
+    P2C, PEER, C2P = list(range(-1, 2, 1))
 
     @staticmethod
     def encode(number):
@@ -84,7 +84,7 @@ class AddrType:
         Virtual (int): 103, virtual hop take by IXP insertion
         Others (int): 104, Other types, say private ones, *, or ones not seen in BGP feeds
     """
-    Normal, InterCo, IxpPref, Virtual, Others = range(100, 105, 1)
+    Normal, InterCo, IxpPref, Virtual, Others = list(range(100, 105, 1))
 
 
 class Addr:

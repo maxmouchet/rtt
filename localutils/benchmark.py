@@ -73,7 +73,7 @@ def evaluation_window(fact, detection, window=0, return_match=False):
     cost_matrix = make_cost_matrix(fact, detection, window)  # construct the cost matrix of bipartite graph
 
     # handle the case there is actually no edges between fact and detection
-    if all([cost_matrix[i][j] == sys.maxint for i in range(len(fact)) for j in range(len(detection))]):
+    if all([cost_matrix[i][j] == sys.maxsize for i in range(len(fact)) for j in range(len(detection))]):
         summary = dict(tp=0, fp=len(detection), fn=len(fact),
                        precision=0, recall=0,
                        dis=None, match=[])
@@ -130,13 +130,13 @@ def evaluation_window_adp(fact, detection, window=0, return_match=False):
 
     cost_matrix = make_cost_matrix(fact, detection, window)
     # handle the case there is actually no edges between fact and detection
-    if all([cost_matrix[i][j] == sys.maxint for i in range(len(fact)) for j in range(len(detection))]):
+    if all([cost_matrix[i][j] == sys.maxsize for i in range(len(fact)) for j in range(len(detection))]):
         summary = dict(tp=0, fp=len(detection), fn=len(fact),
                        precision=0, recall=0,
                        dis=None, match=[])
         return summary
 
-    cut = cut_matrix(cost_matrix, sys.maxint)  # [((fact/line range), (detect/column range)),...]
+    cut = cut_matrix(cost_matrix, sys.maxsize)  # [((fact/line range), (detect/column range)),...]
     match_cut = [evaluation_window(fact[i[0][0]:i[0][1]], detection[i[1][0]:i[1][1]], window, True) for i in cut]
 
     tp = sum([i['tp'] for i in match_cut if i['tp']])  # in general is not possible to have i['tp'] is None
@@ -338,7 +338,7 @@ def character(trace, fact):
     seg_median_diff = np.abs(np.array(seg_median[1:]) - np.array(seg_median[:-1]))
     seg_std = [np.std(trace[i[0]:i[1]]) for i in seg]
     seg_std_diff = np.abs(np.array(seg_std[1:]) - np.array(seg_std[:-1]))
-    return zip(seg_median_diff, seg_std_diff, seg_len[1:], seg_median[1:], seg_std[1:])
+    return list(zip(seg_median_diff, seg_std_diff, seg_len[1:], seg_median[1:], seg_std[1:]))
 
 
 def weighting(trace, fact):
@@ -408,7 +408,7 @@ def min_cost_maximum_match(g):
 
 def make_cost_matrix(x, y, window):
     """ make cost matrix for bipartite graph x, y"""
-    return [[abs(x[i] - y[j]) if abs(x[i]-y[j]) <= window else sys.maxint for j in range(len(y))] for i in range(len(x))]
+    return [[abs(x[i] - y[j]) if abs(x[i]-y[j]) <= window else sys.maxsize for j in range(len(y))] for i in range(len(x))]
 
 
 

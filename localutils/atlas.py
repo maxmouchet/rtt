@@ -2,9 +2,9 @@
 atlas.py provides functions to handle with atlas measurements
 """
 from ripe.atlas.cousteau import AtlasResultsRequest, ProbeRequest
-from error import MES_ERR, TIMEOUT_ERR, UNKNOWN_ERR, LATE_ERR, IP_ERR
+from .error import MES_ERR, TIMEOUT_ERR, UNKNOWN_ERR, LATE_ERR, IP_ERR
 import logging
-import timetools as tt
+from . import timetools as tt
 
 
 def get_pb(pb_tag="system-v3", is_anchor=False, date=None, asn=None):
@@ -112,7 +112,7 @@ def group_by_probe(results):
             else:
                 parsed_mes = dict()
                 logging.warning("%d had unsupported type of measurements %s" % (probe_id, str(type_)))
-            for k in parsed_mes.keys():
+            for k in list(parsed_mes.keys()):
                 by_probe[probe_id][k].append(parsed_mes[k])
         else:
             logging.warning("Encountered an abnormal measurement: %s" % mes)
@@ -234,7 +234,7 @@ def rtt_of_ping(pb_id, tstp, results):
     """
     rtt_in_res = []
     for res in results:
-        for key, value in res.items():
+        for key, value in list(res.items()):
             if key == 'rtt':
                 rtt_in_res.append(float(value))
             elif key == 'error':
@@ -385,7 +385,7 @@ def get_hop(pb_id, tstp, hop_result):
                     "%d had UNKNOWN traceroute measurement error at %s: No from, err, x is present" % (pb_id, tt.epoch_to_string(tstp)))
 
     # get the IP hop with most presence in one traceroute measurement
-    ip_hop = sorted(mes.items(), key=lambda s: len(s[1]), reverse=True)[0][0]
+    ip_hop = sorted(list(mes.items()), key=lambda s: len(s[1]), reverse=True)[0][0]
     rtt = min_pos(mes[ip_hop])  # get non-negative RTT of that hop
     return ip_hop, rtt
 

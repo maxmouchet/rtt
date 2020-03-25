@@ -1,9 +1,9 @@
 """
 cleaning.py is currently not used
 """
-from error import PING_INTV, TRACE_INTV, MISS_ERR, START, PING_LEN, TRACE_LEN
+from .error import PING_INTV, TRACE_INTV, MISS_ERR, START, PING_LEN, TRACE_LEN
 import numpy as np
-import timetools as tt
+from . import timetools as tt
 
 # cleaning criteria
 INTV_MX = 2  # the maximum tolerable consecutive connection losses, times by interval.
@@ -89,6 +89,6 @@ def ref_tstp(tstp):
     head = tstp[0]
     idx = int(np.floor((head - tt.string_to_epoch(START)) / PING_INTV))
     head -= idx * PING_INTV
-    ref = range(head, int(head+PING_INTV*PING_LEN), PING_INTV)
+    ref = list(range(head, int(head+PING_INTV*PING_LEN), PING_INTV))
     return ref
 
